@@ -1,0 +1,45 @@
+plugins {
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.hilt.plugin)
+    alias(libs.plugins.ksp)
+}
+
+android {
+    namespace 'com.basepos.pos.common'
+}
+
+dependencies {
+
+    implementation libs.androidx.core.ktx
+    implementation libs.androidx.appcompat
+    implementation libs.material
+    testImplementation libs.junit
+    androidTestImplementation libs.androidx.junit
+    androidTestImplementation libs.androidx.espresso.core
+
+    //Hilt
+    implementation libs.hilt.android
+    ksp libs.hilt.compiler
+
+    //GSON
+    implementation libs.gson
+
+    //TIMBER
+    implementation libs.timber
+
+    //Bouncy castle for cryptography
+    implementation libs.bcprov.jdk18on
+
+    //JPOS
+    implementation libs.jpos
+
+    //Retrofit
+    implementation libs.retrofit
+    implementation libs.gsonConverter
+    implementation libs.scalarsConverter
+    implementation libs.okhttpLogger
+
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
+}

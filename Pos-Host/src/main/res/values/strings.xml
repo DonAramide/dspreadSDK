@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_packing_message">Error packing message</string>
+    <string name="network_error_please_check_your_connection_and_try_again">Network error. Please check your connection and try again.</string>
+    <string name="host_disconnect">Host disconnect</string>
+    <string name="an_error_occurred">An error occurred</string>
+    <string name="card_not_match_original_transaction">The card inserted does not match the card used in Original transaction</string>
+    <string name="transaction_timeout">Transaction timed out!</string>
+</resources>

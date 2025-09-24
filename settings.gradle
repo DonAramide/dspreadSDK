@@ -1,5 +1,6 @@
 pluginManagement {
     repositories {
+<<<<<<< HEAD
         google()
         mavenCentral()
         jcenter() { url 'https://jcenter.bintray.com/' }
@@ -12,11 +13,25 @@ pluginManagement {
 
 
 
+=======
+        google {
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+>>>>>>> 4501a4f (Wenluo wanng help)
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
+<<<<<<< HEAD
         jcenter() { url 'https://jcenter.bintray.com/' }
         maven { url 'https://jitpack.io' }
         maven {
@@ -29,3 +44,16 @@ dependencyResolutionManagement {
 }
 rootProject.name = "com.dspread.demoui"
 include ':pos_android_studio_app'
+=======
+    }
+}
+
+rootProject.name = "DSpreadBaseApp"
+include ':app'
+include ':Pos-Host'
+include ':Pos-Common'
+include ':Pos-UI'
+include ':Pos-DSpread'
+include ':Dspread-Pos-Sdk'
+include ':Dspread-Print-Sdk'
+>>>>>>> 4501a4f (Wenluo wanng help)

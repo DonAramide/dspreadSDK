@@ -1,0 +1,5 @@
+<resources>
+    <string name="cancel">Cancel</string>
+    <string name="permissions_required">Permissions Required</string>
+    <string name="grant">Grant</string>
+</resources>

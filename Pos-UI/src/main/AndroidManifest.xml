@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+        <activity
+            android:name="com.basepos.pos.ui.transaction.TransactionActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.topwisebaseapp.transaction" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.basepos.pos.ui.printer.PrinterActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.topwisebaseapp.printer" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.basepos.pos.ui.keyexchange.KeyExchangeActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.topwisebaseapp.keyexchange" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.basepos.pos.ui.parameter.ParameterActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.topwisebaseapp.parameter" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

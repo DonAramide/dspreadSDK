@@ -2,6 +2,7 @@
 <project version="4">
   <component name="deploymentTargetSelector">
     <selectionStates>
+<<<<<<< HEAD
       <SelectionState runConfigName="pos_android_studio_app">
         <option name="selectionMode" value="DROPDOWN" />
         <DropdownSelection timestamp="2025-04-22T07:58:57.526507700Z">
@@ -12,6 +13,10 @@
           </Target>
         </DropdownSelection>
         <DialogSelection />
+=======
+      <SelectionState runConfigName="app">
+        <option name="selectionMode" value="DROPDOWN" />
+>>>>>>> 4501a4f (Wenluo wanng help)
       </SelectionState>
     </selectionStates>
   </component>
