@@ -14,12 +14,10 @@ import com.basepos.pos.common.domain.models.TerminalInfo
 import com.basepos.pos.common.domain.repository.EmvListener
 import com.basepos.pos.common.domain.repository.SessionManager
 import com.basepos.pos.common.utils.AmountUtils
-import com.basepos.pos.common.utils.AssetFileReader
 import com.basepos.pos.common.utils.HexUtils
 import com.basepos.pos.common.utils.ISOUtils
 import com.basepos.pos.common.utils.cryptographyUtils.TripleDESUtils
 import com.basepos.pos.common.utils.showSingleChoiceDialog
-import com.basepos.pos.common.utils.toAscii
 import com.basepos.pos.dspread.interfaces.ConnectStateCallback
 import com.basepos.pos.dspread.interfaces.PosInfoCallback
 import com.basepos.pos.dspread.interfaces.PosUpdateCallback
@@ -195,11 +193,11 @@ class DSpreadEmvListener @Inject constructor(
         // Set customer device info for all devices
         val terminalInfo = emvTransactionDetails.terminalInfo
         if (terminalInfo != null) {
-            qposService.setCustomerDeviceInfo(
-                terminalInfo.merchantId ?: "",
-                terminalInfo.merchantNameAndLocation ?: "",
-                ""
-            )
+//            qposService.setCustomerDeviceInfo(//pls don't call this in txns, because our all api is asynchronous methods. And if you need this operation, you should wait for the callback onReturnUpdateEMVResult called, then can call doTrade api.
+//                terminalInfo.merchantId ?: "",
+//                terminalInfo.merchantNameAndLocation ?: "",
+//                ""
+//            )
             Timber.d("Customer device info set")
         }
     }
@@ -243,8 +241,9 @@ class DSpreadEmvListener @Inject constructor(
                 return
             }
 
-            val amount = AmountUtils.toIsoAmount(transactionAmount, currencyCode)
+            var amount = AmountUtils.toIsoAmount(transactionAmount, currencyCode)
 
+            amount = amount.replace(Regex("^0+"), "").takeIf { it.isNotEmpty() } ?: "0"
             // Validate formatted amounts first
             if (amount.isNullOrEmpty() || amount == "000000000000") {
                 Timber.e("Invalid formatted amount: $amount")
@@ -679,6 +678,8 @@ class DSpreadEmvListener @Inject constructor(
 
         override fun onQposRequestPinResult(dataList: MutableList<String>?, offlineTime: Int) {
             Timber.d("onQposRequestPinResult >>> dataList: $dataList, offlineTime: $offlineTime")
+            //todo need to draw the pin keyboard in here, and then call api pinMapSync to sync the pin keyboard location to device firmware.
+
         }
 
         override fun onQposPinMapSyncResult(isSuccess: Boolean, isNeedPin: Boolean) {

@@ -138,6 +138,7 @@ class DSpreadPrinterEngine @Inject constructor(
                     } else {
                         trySend(PrinterState.Error("Print failed: $p1"))
                     }
+                    printer.close()//after finish the printing, need close the printer. Then can do transaction next time
                 }
             })
         } catch (exception: Exception) {
