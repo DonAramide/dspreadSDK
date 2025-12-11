@@ -60,7 +60,7 @@ class DSpreadEmvListener @Inject constructor(
         return suspendCancellableCoroutine { cancellableContinuation ->
             try {
                 openCommunication()
-                MyQposClass.setPosInfoCallback(posInfoCallback)
+                qposClass.setPosInfoCallback(posInfoCallback)
 
                 qposService.getQposId()
                 cancellableContinuation.resume(true) {}
@@ -321,9 +321,9 @@ class DSpreadEmvListener @Inject constructor(
             qposService.setContext(context)
 
             // Set all callbacks BEFORE initializing listener
-            MyQposClass.setStateCallback(connectStateCallback)
-            MyQposClass.setPosUpdateCallback(posUpdateCallback)
-            MyQposClass.setTransactionCallback(transactionCallback)
+            qposClass.setStateCallback(connectStateCallback)
+            qposClass.setPosUpdateCallback(posUpdateCallback)
+            qposClass.setTransactionCallback(transactionCallback)
 
             // Initialize listener after setting all callbacks
             qposService.initListener(qposClass)
@@ -422,8 +422,8 @@ class DSpreadEmvListener @Inject constructor(
     private fun verifyListenerIntegrity(): Boolean {
         return try {
             // Check if the callbacks are still set
-            val hasTransactionCallback = MyQposClass.hasTransactionCallback()
-            val hasStateCallback = MyQposClass.hasStateCallback()
+            val hasTransactionCallback = qposClass.hasTransactionCallback()
+            val hasStateCallback = qposClass.hasStateCallback()
 
             Timber.d("Listener integrity check - Transaction: $hasTransactionCallback, State: $hasStateCallback")
 
@@ -459,9 +459,9 @@ class DSpreadEmvListener @Inject constructor(
             qposService.setContext(context)
 
             // Set callbacks before init
-            MyQposClass.setStateCallback(connectStateCallback)
-            MyQposClass.setPosUpdateCallback(posUpdateCallback)
-            MyQposClass.setTransactionCallback(transactionCallback)
+            qposClass.setStateCallback(connectStateCallback)
+            qposClass.setPosUpdateCallback(posUpdateCallback)
+            qposClass.setTransactionCallback(transactionCallback)
 
             qposService.initListener(qposClass)
             qposService.openUart()
