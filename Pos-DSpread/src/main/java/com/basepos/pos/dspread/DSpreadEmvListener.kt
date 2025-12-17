@@ -615,6 +615,26 @@ class DSpreadEmvListener @Inject constructor(
         }
     }
 
+    /**
+     * Synchronizes PIN pad keyboard mapping when user presses a key
+     * This method should be called when the user interacts with the PIN pad UI
+     *
+     * @param keyValue The value of the key pressed (e.g., "1", "2", etc.)
+     * @param timeout Timeout for the operation in seconds (typically 20)
+     */
+    fun syncPinMapping(keyValue: String, timeout: Int = 20) {
+        try {
+            if (::qposService.isInitialized) {
+                Timber.d("Syncing PIN mapping for key: $keyValue")
+                qposService.pinMapSync(keyValue, timeout)
+            } else {
+                Timber.e("QPOSService not initialized - cannot sync PIN mapping")
+            }
+        } catch (e: Exception) {
+            Timber.e(e, "Error syncing PIN mapping for key: $keyValue")
+        }
+    }
+
     private fun loadMainKey(tmk: String, kcv: String): Boolean {
         return try {
             val cTMK = sessionManager.getCTMK() ?: "0123456789ABCDEFFEDCBA9876543210"
@@ -678,12 +698,52 @@ class DSpreadEmvListener @Inject constructor(
 
         override fun onQposRequestPinResult(dataList: MutableList<String>?, offlineTime: Int) {
             Timber.d("onQposRequestPinResult >>> dataList: $dataList, offlineTime: $offlineTime")
-            //todo need to draw the pin keyboard in here, and then call api pinMapSync to sync the pin keyboard location to device firmware.
 
+            try {
+                // Check if the POS service is available
+                if (!::qposService.isInitialized) {
+                    Timber.e("QPOSService not initialized for PIN pad")
+                    emvResult(EmvResult.Error("PIN pad initialization failed"))
+                    return
+                }
+
+                // Get the online/offline pin status
+                val onlinePin = qposService.isOnlinePin
+                Timber.d("PIN type: ${if (onlinePin) "Online" else "Offline"}")
+
+                // For offline PIN, check try limit
+                if (!onlinePin) {
+                    val cvmPinTryLimit = qposService.cvmPinTryLimit
+                    Timber.d("PIN try limit: $cvmPinTryLimit")
+                }
+
+                // Signal that PIN input is required - this will trigger the UI to show PIN pad
+                emvResult(EmvResult.OnPinInputRequired(!onlinePin, offlineTime))
+
+                // The actual PIN input handling will be done through the EmvResult callback
+                // When user enters PIN, it should call pinMapSync to sync keyboard location
+                Timber.d("PIN input request sent to UI - waiting for PIN entry")
+
+            } catch (e: Exception) {
+                Timber.e(e, "Error in onQposRequestPinResult")
+                emvResult(EmvResult.Error("PIN pad error: ${e.message}"))
+            }
         }
 
         override fun onQposPinMapSyncResult(isSuccess: Boolean, isNeedPin: Boolean) {
+            Timber.d("onQposPinMapSyncResult >>> isSuccess: $isSuccess, isNeedPin: $isNeedPin")
 
+            if (isSuccess) {
+                Timber.d("PIN mapping synchronized successfully")
+                if (isNeedPin) {
+                    Timber.d("PIN is required - continuing with PIN input")
+                } else {
+                    Timber.d("PIN not needed - transaction can continue")
+                }
+            } else {
+                Timber.e("PIN mapping synchronization failed")
+                emvResult(EmvResult.Error("PIN mapping failed"))
+            }
         }
 
         override fun onRequestSetPin(isOfflinePin: Boolean, tryNum: Int) {
